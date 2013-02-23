@@ -1,19 +1,14 @@
 """SideScroll game"""
 
-from pyglet import clock
+from pyglet import app, clock, image
 from pyglet.sprite import Sprite
-from pyglet.image import load
-from pyglet.gl import *
 from pyglet.window import Window, key, mouse
-from pyglet.window.key import KeyStateHandler
-
-fps_display = pyglet.clock.ClockDisplay()
 
 # The images used for sprites
 images = {
-    'arch':   load('sprites/arch-rotated.png'),
-    'bullet': load('sprites/tilde.png'),
-    'star':   load('sprites/star.png'),
+    'arch':   image.load('sprites/arch-rotated.png'),
+    'bullet': image.load('sprites/tilde.png'),
+    'star':   image.load('sprites/star.png'),
 }
 
 # The sprites
@@ -28,18 +23,21 @@ class Game(Window):
         self.bullet = Sprite(images['bullet'], x=-50, y=-50)
 
         # A handler that watches the keyboard state
-        self.keyboard = KeyStateHandler()
+        self.keyboard = key.KeyStateHandler()
         self.set_handlers(self.keyboard)
 
         # Call update() 60 times a second
         clock.schedule_interval(self.update, 1/60.0)
+
+        # Display the current FPS on screen
+        self.fps_display = clock.ClockDisplay()
 
     def on_draw(self):
         """Clear the window, draw the sprites and display framerate"""
         self.clear()
         self.arch.draw()
         self.bullet.draw()
-	fps_display.draw()
+        self.fps_display.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         """This is run when a mouse button is pressed"""
@@ -74,4 +72,4 @@ class Game(Window):
         print "Fire!"
 
 window = Game()
-pyglet.app.run()
+app.run()
