@@ -57,19 +57,28 @@ class Game(Window):
         self.player = Player(self.keyboard, images['arch'], x=100, y=50)
 
         self.bullet_batch = Batch()
-        self.bullet_speed = 700.0
         self.bullets = []
 
         # Display the current FPS on screen
         self.fps_display = clock.ClockDisplay()
 
-        # Call update() 60 times a second
-        clock.schedule_interval(self.update, 1/60.0)
+        clock.schedule_interval(self.update_bullets, 1/30.0)
+        clock.schedule_interval(self.fire_bullets, 1/15.0)
 
-    def update(self, dt):
+    def is_sprite_in_bounds(self, sprite, border=0):
+        """Returns true if a sprite is in the window"""
+        x = sprite.x + sprite.width / 2
+        y = sprite.y + sprite.height / 2
+        return (border < x < self.width - border
+            and border < y < self.height - border)
+
+    def update_bullets(self, dt):
         for bullet in self.bullets:
-            bullet.x = bullet.x + dt * self.bullet_speed
+            bullet.x = bullet.x + dt * 500
+            if not self.is_sprite_in_bounds(bullet):
+                self.bullets.remove(bullet)
 
+    def fire_bullets(self, dt):
         if self.keyboard[key.SPACE]:
             self.fire()
 
