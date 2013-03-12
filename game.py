@@ -14,14 +14,23 @@ images = {
 }
 
 class Player(Sprite):
-    def __init__(self, keyboard, *args, **kwargs):
+    def __init__(self, game, keyboard, *args, **kwargs):
         super(Player, self).__init__(*args, **kwargs)
 
         # Reference the keyboard object so that we can watch it
         self.keyboard = keyboard
 
+	self.game = game	
+
         # Call move_player() 60 times a second
         clock.schedule_interval(self.move, 1/60.0)
+
+    def is_sprite_in_bounds(self, sprite, border=0):
+    	"""Returns true if a sprite is in the window"""
+        x = sprite.x + sprite.width / 2
+        y = sprite.y + sprite.height / 2
+        return (border < x < self.width - border
+        	and border < y < self.height - border)
 
     def move(self, dt):
         """This is called on every update
@@ -30,18 +39,21 @@ class Player(Sprite):
         at around 200 pixels per second"""
 
         distance = dt * 200
+    
+	#locks ship when goes to edge of screen so goes no further
+	#unfourtunately locks ship from moving any other way
+	if self.game.is_sprite_in_bounds(self): 
+        	if self.keyboard[key.RIGHT]:
+        	    	self.x += distance
         
-        if self.keyboard[key.RIGHT]:
-            self.x += distance
-        
-        if self.keyboard[key.LEFT]:
-            self.x -= distance
+        	if self.keyboard[key.LEFT]:
+            		self.x -= distance
 
-        if self.keyboard[key.UP]:
-            self.y += distance
+        	if self.keyboard[key.UP]:
+            		self.y += distance
 
-        if self.keyboard[key.DOWN]:
-            self.y -= distance
+        	if self.keyboard[key.DOWN]:
+            		self.y -= distance
 
 
 class Game(Window):
@@ -54,7 +66,7 @@ class Game(Window):
         self.set_handlers(self.keyboard)
 
         # Create the sprites
-        self.player = Player(self.keyboard, images['arch'], x=100, y=50)
+        self.player = Player(self, self.keyboard, images['arch'], x=100, y=50)
 
         self.bullet_batch = Batch()
         self.bullets = []
