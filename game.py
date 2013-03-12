@@ -40,19 +40,18 @@ class Player(Sprite):
 
         distance = dt * 200
     
+	#Edges dont seem to be at the same size of window.....
 	#locks ships x axis, can not go off screen in x direction
        	if self.keyboard[key.RIGHT] and (self.x < 580):
        	    	self.x += distance
-		print self.game.width
-		print self.x
         
        	if self.keyboard[key.LEFT] and (self.x > 0):
       		self.x -= distance
 
-       	if self.keyboard[key.UP]:
+       	if self.keyboard[key.UP] and (self.y < 422):
        		self.y += distance
 
-       	if self.keyboard[key.DOWN]:
+       	if self.keyboard[key.DOWN] and (self.y > 0):
       		self.y -= distance
 
 
