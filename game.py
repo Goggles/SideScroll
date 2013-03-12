@@ -40,20 +40,20 @@ class Player(Sprite):
 
         distance = dt * 200
     
-	#locks ship when goes to edge of screen so goes no further
-	#unfourtunately locks ship from moving any other way
-	if self.game.is_sprite_in_bounds(self): 
-        	if self.keyboard[key.RIGHT]:
-        	    	self.x += distance
+	#locks ships x axis, can not go off screen in x direction
+       	if self.keyboard[key.RIGHT] and (self.x < 580):
+       	    	self.x += distance
+		print self.game.width
+		print self.x
         
-        	if self.keyboard[key.LEFT]:
-            		self.x -= distance
+       	if self.keyboard[key.LEFT] and (self.x > 0):
+      		self.x -= distance
 
-        	if self.keyboard[key.UP]:
-            		self.y += distance
+       	if self.keyboard[key.UP]:
+       		self.y += distance
 
-        	if self.keyboard[key.DOWN]:
-            		self.y -= distance
+       	if self.keyboard[key.DOWN]:
+      		self.y -= distance
 
 
 class Game(Window):
