@@ -1,5 +1,6 @@
 """SideScroll game"""
 import math
+from random import randint
 
 from pyglet import app, clock, image
 from pyglet.graphics import Batch
@@ -70,18 +71,43 @@ class Game(Window):
         self.bullet_batch = Batch()
         self.bullets = []
 
+	#background stars
+	self.star_batch = Batch()
+	self.stars = []
+
         # Display the current FPS on screen
         self.fps_display = clock.ClockDisplay()
 
         clock.schedule_interval(self.update_bullets, 1/30.0)
         clock.schedule_interval(self.fire_bullets, 1/15.0)
 
-    def is_sprite_in_bounds(self, sprite, border=0):
+	clock.schedule_interval(self.update_stars, 1/10.0)
+	clock.schedule_interval(self.background, 1/10.0)
+
+    #change border to allow sprites off screen
+    def is_sprite_in_bounds(self, sprite, border=-50):
         """Returns true if a sprite is in the window"""
         x = sprite.x + sprite.width / 2
         y = sprite.y + sprite.height / 2
         return (border < x < self.width - border
             and border < y < self.height - border)
+
+    #creates a load of left moving stars for background
+    def update_stars(self, dt):
+	for star in self.stars:
+	    star.x = star.x - 10
+	    if not self.is_sprite_in_bounds(star):
+		self.stars.remove(star)
+
+    def background(self, dt):
+	"""create random number of stars at random y co ordinates"""
+	#for star in self.star:
+	star = Sprite(images['star'], batch=self.star_batch)
+	
+	star.y = randint(0,self.width-1)
+	star.x = self.width 
+	
+	self.stars.append(star) 
 
     def update_bullets(self, dt):
         for bullet in self.bullets:
@@ -99,8 +125,10 @@ class Game(Window):
         self.fps_display.draw()
 
         # Draw the sprites
-        self.player.draw()
+        self.star_batch.draw()
+	self.player.draw()
         self.bullet_batch.draw()
+	
 
     def fire(self):
         """Create a new bullet"""
