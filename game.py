@@ -74,6 +74,9 @@ class Game(Window):
 	#background stars
 	self.star_batch = Batch()
 	self.stars = []
+	
+	self.fast_star_batch = Batch()
+	self.fast_stars = []
 
         # Display the current FPS on screen
         self.fps_display = clock.ClockDisplay()
@@ -82,7 +85,10 @@ class Game(Window):
         clock.schedule_interval(self.fire_bullets, 1/15.0)
 
 	clock.schedule_interval(self.update_stars, 1/15.0)
-	clock.schedule_interval(self.background, 1/10.0)
+	clock.schedule_interval(self.background_1, 1/10.0)
+
+	clock.schedule_interval(self.update_back_stars, 1/30.0)
+	clock.schedule_interval(self.background_2, 1/20.0 )
 
     #change border to allow sprites off screen
     def is_sprite_in_bounds(self, sprite, border=-50):
@@ -92,6 +98,21 @@ class Game(Window):
         return (border < x < self.width - border
             and border < y < self.height - border)
 
+    def update_back_stars(self, dt):
+	for fast_star in self.fast_stars:
+	    fast_star.x = fast_star.x - 20
+	    if not self.is_sprite_in_bounds(fast_star):
+		self.fast_stars.remove(fast_star)
+
+    def background_2(self, dt):
+	"""Random stars created in back moving faster"""
+	fast_star = Sprite(images['star'], batch=self.fast_star_batch)
+
+	fast_star.y = randint(0, self.width-1)
+	fast_star.x = self.width
+	
+	self.fast_stars.append(fast_star)
+
     #creates a load of left moving stars for background
     def update_stars(self, dt):
 	for star in self.stars:
@@ -99,7 +120,7 @@ class Game(Window):
 	    if not self.is_sprite_in_bounds(star):
 		self.stars.remove(star)
 
-    def background(self, dt):
+    def background_1(self, dt):
 	"""create random number of stars at random y co ordinates"""
 	#for star in self.star:
 	star = Sprite(images['star'], batch=self.star_batch)
@@ -126,6 +147,7 @@ class Game(Window):
 
         # Draw the sprites
         self.star_batch.draw()
+	self.fast_star_batch.draw()
 	self.player.draw()
         self.bullet_batch.draw()
 	
