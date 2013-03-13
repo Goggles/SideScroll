@@ -49,10 +49,10 @@ class Player(Sprite):
        	if self.keyboard[key.LEFT] and (self.x > 0):
       		self.x -= distance
 
-       	if self.keyboard[key.UP] and (self.y < self.game.height-self.height):
+       	if self.keyboard[key.UP] and (self.y < self.game.height-(self.height/3)*2):
        		self.y += distance
 
-       	if self.keyboard[key.DOWN] and (self.y > 0):
+       	if self.keyboard[key.DOWN] and (self.y > 0-self.height/3):
       		self.y -= distance
 
 
