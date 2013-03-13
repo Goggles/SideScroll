@@ -82,7 +82,7 @@ class Game(Window):
         clock.schedule_interval(self.fire_bullets, 1/15.0)
 
 	clock.schedule_interval(self.update_stars, 1/15.0)
-	clock.schedule_interval(self.background, 1/15.0)
+	clock.schedule_interval(self.background, 1/10.0)
 
     #change border to allow sprites off screen
     def is_sprite_in_bounds(self, sprite, border=-50):
