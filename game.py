@@ -1,6 +1,6 @@
 """SideScroll game"""
 import math
-from random import randint
+import random
 
 from pyglet import app, clock, image
 from pyglet.graphics import Batch
@@ -100,7 +100,7 @@ class Game(Window):
 
     def update_back_stars(self, dt):
 	for fast_star in self.fast_stars:
-	    fast_star.x = fast_star.x - 20
+	    fast_star.x = fast_star.x + (fast_star.scale-10)*2.5 
 	    if not self.is_sprite_in_bounds(fast_star):
 		self.fast_stars.remove(fast_star)
 
@@ -108,9 +108,11 @@ class Game(Window):
 	"""Random stars created in back moving faster"""
 	fast_star = Sprite(images['star'], batch=self.fast_star_batch)
 
-	fast_star.y = randint(0, self.width-1)
+	fast_star.y = random.uniform(0, self.width-1)
 	fast_star.x = self.width
 	
+	fast_star.scale = random.uniform(0.2, 2.0)
+
 	self.fast_stars.append(fast_star)
 
     #creates a load of left moving stars for background
@@ -125,7 +127,7 @@ class Game(Window):
 	#for star in self.star:
 	star = Sprite(images['star'], batch=self.star_batch)
 	
-	star.y = randint(0,self.width-1)
+	star.y = random.uniform(0,self.width-1)
 	star.x = self.width 
 	
 	self.stars.append(star) 
