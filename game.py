@@ -42,13 +42,13 @@ class Player(Sprite):
     
 	#Edges dont seem to be at the same size of window.....
 	#locks ships x axis, can not go off screen in x direction
-       	if self.keyboard[key.RIGHT] and (self.x < 580):
+       	if self.keyboard[key.RIGHT] and (self.x < self.game.width-self.width):
        	    	self.x += distance
         
        	if self.keyboard[key.LEFT] and (self.x > 0):
       		self.x -= distance
 
-       	if self.keyboard[key.UP] and (self.y < 422):
+       	if self.keyboard[key.UP] and (self.y < self.game.height-self.height):
        		self.y += distance
 
        	if self.keyboard[key.DOWN] and (self.y > 0):
