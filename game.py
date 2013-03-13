@@ -100,7 +100,7 @@ class Game(Window):
 
     def update_back_stars(self, dt):
 	for fast_star in self.fast_stars:
-	    fast_star.x = fast_star.x + (fast_star.scale-10)*2.5 
+	    fast_star.x = fast_star.x + (fast_star.scale-15)*2.5 
 	    if not self.is_sprite_in_bounds(fast_star):
 		self.fast_stars.remove(fast_star)
 
@@ -111,14 +111,14 @@ class Game(Window):
 	fast_star.y = random.uniform(0, self.width-1)
 	fast_star.x = self.width
 	
-	fast_star.scale = random.uniform(0.2, 2.0)
+	fast_star.scale = random.uniform(0.2, 1.5)
 
 	self.fast_stars.append(fast_star)
 
     #creates a load of left moving stars for background
     def update_stars(self, dt):
 	for star in self.stars:
-	    star.x = star.x - 10
+	    star.x = star.x + (star.scale-15)*2.5
 	    if not self.is_sprite_in_bounds(star):
 		self.stars.remove(star)
 
@@ -129,6 +129,8 @@ class Game(Window):
 	
 	star.y = random.uniform(0,self.width-1)
 	star.x = self.width 
+
+	star.scale = random.uniform(0.2, 1.5)
 	
 	self.stars.append(star) 
 
@@ -158,7 +160,7 @@ class Game(Window):
         """Create a new bullet"""
         bullet = Sprite(images['bullet'], batch=self.bullet_batch)
         
-        bullet.x = self.player.x + self.player.width + 10
+        bullet.x = self.player.x + self.player.width  
         bullet.y = self.player.y + self.player.height / 2 - bullet.height / 2
 
         self.bullets.append(bullet)
