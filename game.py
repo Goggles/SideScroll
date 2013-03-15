@@ -2,6 +2,7 @@
 import math
 import random
 
+import pyglet
 from pyglet import app, clock, image
 from pyglet.graphics import Batch
 from pyglet.sprite import Sprite
@@ -12,6 +13,7 @@ images = {
     'arch':   image.load('sprites/arch-rotated.png'),
     'bullet': image.load('sprites/tilde.png'),
     'star':   image.load('sprites/star.png'),
+    'windows': image.load('sprites/big_windows.png'),
 }
 
 class Player(Sprite):
@@ -54,7 +56,7 @@ class Player(Sprite):
 
        	if self.keyboard[key.DOWN] and (self.y > 0-self.height/3):
       		self.y -= distance
-
+	
 
 class Game(Window):
     def __init__(self):
@@ -64,6 +66,9 @@ class Game(Window):
         # A handler that watches the keyboard state
         self.keyboard = key.KeyStateHandler()
         self.set_handlers(self.keyboard)
+
+	#label for the pause menu
+#	self.label = pyglet.text.Label
 
         # Create the sprites
         self.player = Player(self, self.keyboard, images['arch'], x=100, y=50)
@@ -78,17 +83,25 @@ class Game(Window):
 	self.fast_star_batch = Batch()
 	self.fast_stars = []
 
+	#windows enemies
+	self.enemy_batch = Batch()
+	self.win_enemy = [] 
+
         # Display the current FPS on screen
         self.fps_display = clock.ClockDisplay()
 
         clock.schedule_interval(self.update_bullets, 1/30.0)
         clock.schedule_interval(self.fire_bullets, 1/15.0)
 
+	#update background 
 	clock.schedule_interval(self.update_stars, 1/15.0)
 	clock.schedule_interval(self.background_1, 1/10.0)
-
 	clock.schedule_interval(self.update_back_stars, 1/30.0)
 	clock.schedule_interval(self.background_2, 1/20.0 )
+
+	#update enemies
+	clock.schedule_interval(self.update_enemy, 1/5.0)
+	clock.schedule_interval(self.enemy, 1/1.0)
 
     #change border to allow sprites off screen
     def is_sprite_in_bounds(self, sprite, border=-50):
@@ -98,9 +111,27 @@ class Game(Window):
         return (border < x < self.width - border
             and border < y < self.height - border)
 
+#-------------------------------------Enemies section --------------------------#
+    def update_enemy(self, dt):
+	for enemy in self.win_enemy:
+		enemy.x = enemy.x - 20
+		if not self.is_sprite_in_bounds(enemy):
+		    self.win_enemy.remove(enemy)
+
+    def enemy(self, dt):
+	"""creates enemies """
+        enemy = Sprite(images['windows'], batch=self.enemy_batch)
+
+	enemy.y = random.uniform(0, self.width-1)
+	enemy.x = self.width
+
+	self.win_enemy.append(enemy)	
+
+
+#--------------------------------------Background stuff -------------------------#
     def update_back_stars(self, dt):
 	for fast_star in self.fast_stars:
-	    fast_star.x = fast_star.x + (fast_star.scale-15)*2.5 
+	    fast_star.x = fast_star.x + (fast_star.scale-15)*2.0 
 	    if not self.is_sprite_in_bounds(fast_star):
 		self.fast_stars.remove(fast_star)
 
@@ -111,14 +142,14 @@ class Game(Window):
 	fast_star.y = random.uniform(0, self.width-1)
 	fast_star.x = self.width
 	
-	fast_star.scale = random.uniform(0.2, 1.5)
+	fast_star.scale = random.uniform(0.2, 2)
 
 	self.fast_stars.append(fast_star)
 
     #creates a load of left moving stars for background
     def update_stars(self, dt):
 	for star in self.stars:
-	    star.x = star.x + (star.scale-15)*2.5
+	    star.x = star.x + (star.scale-15)*2.0
 	    if not self.is_sprite_in_bounds(star):
 		self.stars.remove(star)
 
@@ -130,9 +161,11 @@ class Game(Window):
 	star.y = random.uniform(0,self.width-1)
 	star.x = self.width 
 
-	star.scale = random.uniform(0.2, 1.5)
+	star.scale = random.uniform(0.2, 2)
 	
 	self.stars.append(star) 
+#---------------------------------End Background stuff---------------------------#
+
 
     def update_bullets(self, dt):
         for bullet in self.bullets:
@@ -152,6 +185,7 @@ class Game(Window):
         # Draw the sprites
         self.star_batch.draw()
 	self.fast_star_batch.draw()
+	self.enemy_batch.draw()
 	self.player.draw()
         self.bullet_batch.draw()
 	
@@ -164,6 +198,7 @@ class Game(Window):
         bullet.y = self.player.y + self.player.height / 2 - bullet.height / 2
 
         self.bullets.append(bullet)
+
 
     def on_mouse_press(self, x, y, button, modifiers):
         """This is run when a mouse button is pressed"""
