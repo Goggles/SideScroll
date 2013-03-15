@@ -41,7 +41,7 @@ class Player(Sprite):
         It uses the keyboard input to move the player
         at around 200 pixels per second"""
 
-        distance = dt * 200
+        distance = dt * 400
     
 	#Edges dont seem to be at the same size of window.....
 	#locks ships x axis, can not go off screen in x direction
@@ -99,9 +99,17 @@ class Game(Window):
 	clock.schedule_interval(self.update_back_stars, 1/30.0)
 	clock.schedule_interval(self.background_2, 1/20.0 )
 
+	time = random.uniform(1.0, 5.0)
+	
 	#update enemies
-	clock.schedule_interval(self.update_enemy, 1/5.0)
-	clock.schedule_interval(self.enemy, 1/1.0)
+	clock.schedule_interval(self.update_enemy, 1/60.0)
+	clock.schedule_interval(self.enemy, 1/time)
+
+	#update enemy hit
+	clock.schedule_interval(self.on_hit, 1/60.0)
+
+	#update player hit
+	clock.schedule_interval(self.on_hit_player, 1/59.0)
 
     #change border to allow sprites off screen
     def is_sprite_in_bounds(self, sprite, border=-50):
@@ -114,7 +122,7 @@ class Game(Window):
 #-------------------------------------Enemies section --------------------------#
     def update_enemy(self, dt):
 	for enemy in self.win_enemy:
-		enemy.x = enemy.x - 20
+		enemy.x = enemy.x - dt * 200
 		if not self.is_sprite_in_bounds(enemy):
 		    self.win_enemy.remove(enemy)
 
@@ -122,7 +130,7 @@ class Game(Window):
 	"""creates enemies """
         enemy = Sprite(images['windows'], batch=self.enemy_batch)
 
-	enemy.y = random.uniform(0, self.width-1)
+	enemy.y = random.uniform(480, self.width-480)
 	enemy.x = self.width
 
 	self.win_enemy.append(enemy)	
@@ -164,18 +172,31 @@ class Game(Window):
 	star.scale = random.uniform(0.2, 2)
 	
 	self.stars.append(star) 
-#---------------------------------End Background stuff---------------------------#
 
 
+#-----------------------------------bullet update and collision------------------#
     def update_bullets(self, dt):
         for bullet in self.bullets:
-            bullet.x = bullet.x + dt * 500
+            bullet.x = bullet.x + dt * 800
             if not self.is_sprite_in_bounds(bullet):
                 self.bullets.remove(bullet)
 
     def fire_bullets(self, dt):
         if self.keyboard[key.SPACE]:
             self.fire()
+
+    def on_hit(self, dt):
+	for bullet in self.bullets:
+	    for enemy in self.win_enemy:
+		print bullet.x
+		if bullet.x > enemy.x and bullet.y < enemy.y+enemy.height and bullet.y > enemy.y-enemy.height:
+		    self.bullets.remove(bullet)
+		    self.win_enemy.remove(enemy)
+
+    def on_hit_player(self, dt):
+	for enemy in self.win_enemy:
+	   if enemy.x < self.player.x and enemy.x > self.player.x-self.player.width and enemy.y < self.player.y+self.player.height and enemy.y > self.player.y-self.player.height:
+		self.win_enemy.remove(enemy)
 
     def on_draw(self):
         """Clear the window, display the framerate and draw the sprites"""
