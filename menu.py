@@ -1,6 +1,6 @@
 """Menu for sidescroll game"""
 import pyglet
-#import game
+import game
 
 from pyglet.sprite import Sprite
 from pyglet.graphics import Batch
@@ -44,7 +44,8 @@ class Select(Sprite):
 
 	if self.keyboard[key.ENTER]:
 		if self.y == self.main_menu.height-160:
-			print 'cake'
+			game.Game()
+			#os.system("game.py")
 				
 
 
