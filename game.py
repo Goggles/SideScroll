@@ -188,8 +188,8 @@ class Game(Window):
     def on_hit(self, dt):
 	for bullet in self.bullets:
 	    for enemy in self.win_enemy:
-		print bullet.x
-		if bullet.x > enemy.x and bullet.y < enemy.y+enemy.height and bullet.y > enemy.y-enemy.height:
+	#	print bullet.x
+		if bullet.x > enemy.x and bullet.x < (enemy.x + enemy.width) and bullet.y < enemy.y+enemy.height and bullet.y > enemy.y-enemy.height:
 		    self.bullets.remove(bullet)
 		    self.win_enemy.remove(enemy)
 
