@@ -25,6 +25,8 @@ class Player(Sprite):
 
 	self.game = game	
 
+	self.health = 50
+
         # Call move_player() 60 times a second
         clock.schedule_interval(self.move, 1/60.0)
 
@@ -107,6 +109,10 @@ class Game(Window):
 
 	#update enemy hit
 	clock.schedule_interval(self.on_hit, 1/60.0)
+	
+	#check players health
+	clock.schedule_interval(self.checkHealth, 1/60.0)
+
 
 	#update player hit
 	clock.schedule_interval(self.on_hit_player, 1/59.0)
@@ -193,10 +199,18 @@ class Game(Window):
 		    self.bullets.remove(bullet)
 		    self.win_enemy.remove(enemy)
 
+################################################################# Check player health if <= 0 clear screen display game over
+    def checkHealth(self, dt):
+        if self.player.health <= 0:
+           window.clear()
+###################################################################
+
     def on_hit_player(self, dt):
 	for enemy in self.win_enemy:
 	   if enemy.x < self.player.x and enemy.x > self.player.x-self.player.width and enemy.y < self.player.y+self.player.height and enemy.y > self.player.y-self.player.height:
 		self.win_enemy.remove(enemy)
+		self.player.health = self.player.health -1
+		print self.player.health
 
     def on_draw(self):
         """Clear the window, display the framerate and draw the sprites"""
