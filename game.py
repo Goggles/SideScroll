@@ -129,6 +129,7 @@ class Game(Window):
     def update_enemy(self, dt):
 	for enemy in self.win_enemy:
 		enemy.x = enemy.x - dt * 200
+		enemy.y = enemy.startY + math.sin((enemy.x + enemy.startY)  / 100)*100
 		if not self.is_sprite_in_bounds(enemy):
 		    self.win_enemy.remove(enemy)
 
@@ -136,8 +137,9 @@ class Game(Window):
 	"""creates enemies """
         enemy = Sprite(images['windows'], batch=self.enemy_batch)
 
-	enemy.y = random.uniform(480, self.width-480)
+	enemy.y = random.uniform(0, self.width)
 	enemy.x = self.width
+	enemy.startY = enemy.y
 
 	self.win_enemy.append(enemy)	
 
@@ -153,7 +155,7 @@ class Game(Window):
 	"""Random stars created in back moving faster"""
 	fast_star = Sprite(images['star'], batch=self.fast_star_batch)
 
-	fast_star.y = random.uniform(0, self.width-1)
+	fast_star.y = random.uniform(0, self.height)
 	fast_star.x = self.width
 	
 	fast_star.scale = random.uniform(0.2, 2)
