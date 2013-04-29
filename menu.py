@@ -82,6 +82,11 @@ class Main_menu(Window):
                                                     y=self.height-200,
                                                     anchor_x='center',
                                                     )
+		self.option3 = pyglet.text.Label('Option3', font_size= 14,
+						    x=self.width//2,
+						    y=self.height-250,
+						    anchor_x='center',
+						    )
 
 
 		#A key handler that watches the keyboard state
