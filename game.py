@@ -115,9 +115,29 @@ class Game(Window):
 	#check players health
 	clock.schedule_interval(self.checkHealth, 1/60.0)
 
+	#refreshes player info
+	clock.schedule_interval(self.gui_update, 1/60.0)
 
 	#update player hit
 	clock.schedule_interval(self.on_hit_player, 1/59.0)
+
+    def gui_update(self, dt):
+	self.player_points = pyglet.text.Label('Player Points: %d' % self.player.points,
+						font_size=14,
+                                                x= 100,
+                                                y= 25,
+                                                anchor_x='center',
+                                                )
+
+	self.player_health = pyglet.text.Label('Player Health: %d' % self.player.health, 
+                                                font_size=14,
+                                                x= 275,
+                                                y= 25,
+                                                anchor_x='center',
+                                                )
+
+	
+
 
     #change border to allow sprites off screen
     def is_sprite_in_bounds(self, sprite, border=-50):
@@ -233,6 +253,8 @@ class Game(Window):
 	self.player.draw()
         self.bullet_batch.draw()
 	
+	self.player_points.draw()
+	self.player_health.draw()
 
     def fire(self):
         """Create a new bullet"""
