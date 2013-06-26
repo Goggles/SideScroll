@@ -3,6 +3,8 @@ SideScroll
 
 A sidescrolling shooter game, in python, that will be heavily customisable.
 
+REQUIRE PYGLET
+
 ##Parts of the Game
 * Menu - this is where the choice of; New Game, Continue, Options, Help, Credits and Exit will be listed. It will have a cool background...
 
