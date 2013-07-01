@@ -26,7 +26,7 @@ class Player(Sprite):
 
 	self.game = game	
 
-	self.health = 50
+	self.health = 5
 	self.points = 0
 
         # Call move_player() 60 times a second
@@ -229,9 +229,25 @@ class Game(Window):
 ################################################################# Check player health if <= 0 clear screen display game over
     def checkHealth(self, dt):
         if self.player.health <= 0:
-           window.clear()
-	   self.player.health = 50
+	   self.clear_schedules()
+	   self.player.health = 5
 	   	   
+    def clear_schedules(self):
+	clock.unschedule(self.update_bullets)
+	clock.unschedule(self.fire_bullets)
+	clock.unschedule(self.update_stars)
+	clock.unschedule(self.background_1)
+	clock.unschedule(self.update_back_stars)
+	clock.unschedule(self.background_2)
+	clock.unschedule(self.update_enemy)
+	clock.unschedule(self.enemy)
+	clock.unschedule(self.on_hit)
+	clock.unschedule(self.checkHealth)
+	clock.unschedule(self.gui_update)
+	clock.unschedule(self.on_hit_player)
+	clock.unschedule(self.player.move)
+	self.clear();
+	
 ###################################################################
 
     def on_hit_player(self, dt):
