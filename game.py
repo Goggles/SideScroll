@@ -26,11 +26,15 @@ class Player(Sprite):
 
 	self.game = game	
 
+	self.paused = False;
+
 	self.health = 5
 	self.points = 0
 
         # Call move_player() 60 times a second
         clock.schedule_interval(self.move, 1/60.0)
+
+	clock.schedule_interval(self.check_if_paused, 1/10.0)
 
     def is_sprite_in_bounds(self, sprite, border=0):
     	"""Returns true if a sprite is in the window"""
@@ -60,6 +64,23 @@ class Player(Sprite):
 
        	if (self.keyboard[key.DOWN] or self.keyboard[key.S]) and (self.y > 0-self.height/3):
       		self.y -= distance
+
+
+########################## Pause button #######################
+    def check_if_paused(self, dt):
+	if (self.keyboard[key.P]):
+		self.check_pause()	
+
+    def check_pause(self):
+	if(self.paused):
+		print "True"
+		self.paused = False
+		self.game.resume()
+	else:
+		print "False"
+		self.paused = True
+		self.game.clear_schedules()
+
 	
 
 class Game(Window):
@@ -246,7 +267,25 @@ class Game(Window):
 	clock.unschedule(self.gui_update)
 	clock.unschedule(self.on_hit_player)
 	clock.unschedule(self.player.move)
-	self.clear();
+	#self.clear();
+
+    def resume(self):
+	clock.schedule_interval(self.update_bullets, 1/30.0)
+        clock.schedule_interval(self.fire_bullets, 1/15.0)
+        clock.schedule_interval(self.update_stars, 1/15.0)
+        clock.schedule_interval(self.background_1, 1/10.0)
+        clock.schedule_interval(self.update_back_stars, 1/30.0)
+        clock.schedule_interval(self.background_2, 1/20.0 )
+        clock.schedule_interval(self.update_enemy, 1/60.0)
+	time = random.uniform(2.0, 5.0)
+        clock.schedule_interval(self.enemy, 1/time)
+        clock.schedule_interval(self.on_hit, 1/60.0)
+        clock.schedule_interval(self.checkHealth, 1/60.0)
+        clock.schedule_interval(self.gui_update, 1/60.0)
+        clock.schedule_interval(self.on_hit_player, 1/59.0)
+	clock.schedule_interval(self.player.move, 1/60.0)
+
+
 	
 ###################################################################
 
